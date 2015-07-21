@@ -61,12 +61,12 @@ SendInput {ENTER}{ENTER}
 SendInput {Raw}ELSE
 SendInput {ENTER}{ENTER}
 SendInput {Raw}ENDIF
-loop, 5 
+loop, 4 
 { 
 	Send {Up} 
 }
 Send {End}
-loop, 6 
+loop, 7 
 { 
 	Send {Left} 
 }

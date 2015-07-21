@@ -1,0 +1,59 @@
+{**************************************************************
+* Author: MA. 
+* Description: VGL simple file logger. Creates log. One file for one day.
+* usage
+* JOIN LIBRARY ma_logger
+* log_info_ext("info message here", "name of file, method, module...")
+* log_error("error here")
+**************************************************************}
+
+SET COMPILE_OPTION DECLARE
+ENABLE WINDOWS
+SET NAME "DEFER/"
+JOIN LIBRARY $lib_utils
+
+{log info}
+GLOBAL ROUTINE log_info ( VALUE message)
+	log_info_ext(message, "")
+ENDROUTINE
+
+GLOBAL ROUTINE log_info_ext ( VALUE message, VALUE tag)
+	DECLARE info_message, tag_sign
+	tag_sign = tag
+	IF (!BLANK(tag_sign)) THEN
+		tag_sign = "(" : tag_sign : ") "
+	ENDIF
+	info_message = "[" : NOW : "] |    INFO   " : " | " : tag_sign : message
+	write_to_file ( info_message )
+ENDROUTINE
+
+{log error}
+GLOBAL ROUTINE log_error ( VALUE message)
+	log_error_ext(message, "")
+ENDROUTINE
+
+{log error with custom tag, allows to simplify searching inside file}
+GLOBAL ROUTINE log_error_ext ( VALUE message, VALUE tag )
+	DECLARE error_message, tag_sign
+	tag_sign = tag
+	IF (!BLANK(tag_sign)) THEN
+		tag_sign = "(" : tag_sign : ") "
+	ENDIF	
+	error_message = "[" : NOW : "] |    ERROR  " : " | " : tag_sign : message
+	write_to_file ( error_message )
+ENDROUTINE
+
+ROUTINE write_to_file ( text )
+	DECLARE file_path, log_folder_path
+	log_folder_path = "C:\Logs\" {log folder location}
+	file_path = log_folder_path : LEFTSTRING(TODAY, 11) : ".txt"
+
+	IF (!(FILE EXISTS(file_path))) THEN
+		FILE CREATE file_path
+	ENDIF	
+
+	FILE EXTEND file_path
+	FILE WRITE file_path, text
+	FILE CLOSE file_path
+
+ENDROUTINE
