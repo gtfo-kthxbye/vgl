@@ -36,6 +36,20 @@ SendInput {Raw}ENDROUTINE
 SendInput {UP}
 return
 
+;array snippet
+:*:VARR::
+SendInput {Raw}ARRAY ?_NAME_? ARRAY_SIZE (?_SIZE_?)
+Send {Home}
+loop, 6 
+{ 
+	Send {Right} 
+}
+loop, 8 
+{ 
+	Send {Shift}+{Right}
+}
+return
+
 ;function snippet
 :*:VFUNC::
 SendInput {Raw}ROUTINE ?_NAME_? ( ?_VAR_? )
